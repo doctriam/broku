@@ -10,6 +10,8 @@ I was using [roku-cli](https://github.com/ncmiller/roku-cli) for Roku controls. 
 recommend it for its ease of use, but it didn't have all the commands I was
 looking for, namely power and volume controls and app buttons.
 
+[BRoku Screenshot](./screenshots/broku_0_1.jpg)
+
 ### Installation:
 In the current state, the repo needs to be stored in ~/Projects/broku.  That
 will be fixed later.

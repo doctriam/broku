@@ -83,7 +83,6 @@ function print_list() {
     ## List commands and inputs
     echo -en "\nCOMMANDS:\n"
     rows=${#commands[@]}/2
-    echo "  Controls:"
     echo "   ___Controls_____________________________________________________"
     for (( i=0; i<="$rows-1"; i++ )); do
         cn1="${cmdname[${commands[$i]}]}"
