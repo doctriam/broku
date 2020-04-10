@@ -1,0 +1,42 @@
+{
+    "_NOTE": "First device is the default",
+    "Devices": [
+        { "name": "55", "ip": "192.168.1.79" },
+        { "name": "43", "ip": "192.168.1.98" }
+    ],
+    "Commands": [
+        { "name": "power", "cmd": "keypress/power" },
+        { "name": "volumeup", "cmd": "keypress/volumeup" },
+        { "name": "volumedown", "cmd": "keypress/volumedown" },
+        { "name": "volumemute", "cmd": "keypress/volumemute" },
+        { "name": "back", "cmd": "keypress/back" },
+        { "name": "home", "cmd": "keypress/home" },
+        { "name": "enter", "cmd": "keypress/select" },
+        { "name": "ok", "cmd": "keypress/select" },
+        { "name": "select", "cmd": "keypress/select" },
+        { "name": "up", "cmd": "keypress/up" },
+        { "name": "down", "cmd": "keypress/down" },
+        { "name": "left", "cmd": "keypress/left" },
+        { "name": "right", "cmd": "keypress/right" },
+        { "name": "info", "cmd": "keypress/info" },
+        { "name": "instantreplay", "cmd": "keypress/instantreplay" },
+        { "name": "search", "cmd": "keypress/search" },
+        { "name": "fwd", "cmd": "keypress/fwd" },
+        { "name": "rev", "cmd": "keypress/rev" },
+        { "name": "play", "cmd": "keypress/play" },
+        { "name": "hdmi1", "cmd": "launch/tvinput.hdmi1" },
+        { "name": "hdmi2", "cmd": "launch/tvinput.hdmi2" },
+        { "name": "hdmi3", "cmd": "launch/tvinput.hdmi3" },
+        { "name": "switch", "cmd": "launch/tvinput.hdmi1" },
+        { "name": "chromecast", "cmd": "launch/tvinput.hdmi2" },
+        { "name": "computer", "cmd": "launch/tvinput.hdmi3" },
+        { "name": "prime", "cmd": "launch/13" },
+        { "name": "funimation", "cmd": "launch/14654" },
+        { "name": "hulu", "cmd": "launch/2285" },
+        { "name": "netflix", "cmd": "launch/12" },
+        { "name": "plex", "cmd": "launch/13535" },
+        { "name": "roku", "cmd": "launch/151908" },
+        { "name": "youtube", "cmd": "launch/837" }
+
+    ]
+}

@@ -1,0 +1,75 @@
+#!/bin/bash
+
+## Read json file
+json="$HOME/Projects/broku/broku_args.json"
+name=( $(jq -r '.Devices[].name ' $json) )
+ip=( $(jq -r '.Devices[].ip ' $json) )
+cmdname=( $(jq -r '.Commands[].name ' $json) )
+cmd=( $(jq -r '.Commands[].cmd ' $json) )
+
+if [ $# -eq 0 ]; then
+    echo "USAGE: droku [DEVICE] [COMMAND]"
+    echo -en "(example: droku roku55 hulu\n\n"
+    echo "DEVICES:"
+    for i in "${name[@]}"; do
+        echo "  $i"
+    done
+    echo -en "\nCOMMANDS:\n"
+    echo "  Controls:"
+    apps=()
+    for i in "${!cmdname[@]}"; do
+        if [[ "${cmd[$i]}" =~ "keypress" ]]; then
+            echo "    ${cmdname[$i]}"
+        else
+            apps+=("$i")
+        fi
+    done
+    echo "  Apps:"
+    inputs=()
+    for i in "${apps[@]}"; do
+        if [[ "${cmd[$i]}" == *"tv"* ]]; then
+            inputs+=($i)
+        else
+            echo "    ${cmdname[$i]}"
+        fi
+    done
+    echo "  TV Inputs:"
+    for i in "${inputs[@]}"; do
+        echo "    ${cmdname[$i]}"
+    done
+    echo -en "\n"
+    exit 1
+else
+
+    ## Read arguments
+    DEVICE=$1
+    REQUEST=$2
+
+    ## Create local variables
+    ipindex=99
+    cmdindex=99
+
+    ## Compare arguments to device and command names
+    for i in ${!name[@]}; do
+        if [[ ${name[$i]} == $DEVICE ]]; then
+            ipindex=$i
+        fi
+    done
+    for i in ${!cmdname[@]}; do
+        if [[ ${cmdname[$i]} == ${REQUEST} ]]; then
+            cmdindex=$i
+        fi
+    done
+
+    if [[ $ipindex == 99 ]] || [[ $cmdindex == 99 ]]; then
+        echo "ERROR: Check arguments"
+    else
+        echo "${cmdname[$cmdindex]^} command requested on ${name[$ipindex]}: ${ip[$ipindex]}"
+    fi
+
+    url="http://${ip[$ipindex]}:8060"
+
+    curl -d '' "$url/${cmd[$cmdindex]}"
+    echo -en "${name[$ipindex]^} has been sent a ${cmdname[$cmdindex]} signal\n\n"
+fi
+
