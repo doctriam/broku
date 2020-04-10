@@ -14,17 +14,17 @@ looking for, namely power and volume controls and app buttons.
 ### Installation:
 In the current state, the repo needs to be stored in ~/Projects/broku.  That
 will be fixed later.
-'''
+```
 $ mkdir -p ~/Projects
 $ git clone https://github.com/doctriam/awesomerc ~/Projects/broku
 $ mkdir -p ~/bin
 $ ln -s $HOME/Projects/broku/broku ~/bin/broku
-'''
+```
 
 To directly access commands in your bin folder, put this at the end of your .bashrc file:
-'''
+```
 export PATH=$PATH:~/bin
-'''
+```
 
 
 To setup devices, open up broku\_args.json in your favorite editor and edit the
@@ -33,14 +33,14 @@ each device in the settings on the device under Settings > Network > About.
 
 ### Usage:
 For now, usage is one command at a time by running:
-'''
+```
 $ broku [DEVICE] [COMMAND]
-'''
+```
 
 So, to power on my 55" roku TV, I use:
-'''
+```
 $ broku 55 power
-'''
+```
 
 To edit the devices or commands that you want to use, edit the broku_args.json
 file.  Specifically, change the names to adjust the the arguments that you want
@@ -81,17 +81,17 @@ I have also included these commands which switch to the Roku TV inputs
 * chromecast
 * switch
 
-### Adding more controls Roku App IDs:
+### Adding Roku App IDs:
 To add the apps that you use on your Roku device, call this in terminal:
-'''
+```
 curl http://[device ip address]:8060/query/apps
-'''
+```
 
 The output will display the app ID and name along with some other info.  Just
 add the name and ID to broku\_args.json as follows:
-'''
+```
 { "name": "[new name]", "cmd": "launch/[app id]" }
-'''
+```
 
 ### Planned improvements:
 * Automatic search for device and add
