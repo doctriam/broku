@@ -21,6 +21,12 @@ $ mkdir -p ~/bin
 $ ln -s $HOME/Projects/broku/broku ~/bin/broku
 ```
 
+Requires jq package for reading json file:
+#### Arch Installation
+```
+sudo pacman -S jq
+```
+
 To directly access commands in your bin folder, put this at the end of your .bashrc file:
 ```
 export PATH=$PATH:~/bin
