@@ -2,74 +2,149 @@
 
 ## Read json file
 json="$HOME/Projects/broku/broku_args.json"
-name=( $(jq -r '.Devices[].name ' $json) )
-ip=( $(jq -r '.Devices[].ip ' $json) )
-cmdname=( $(jq -r '.Commands[].name ' $json) )
-cmd=( $(jq -r '.Commands[].cmd ' $json) )
+name=( $(jq -r '.Devices[].name ' "$json") )
+ip=( $(jq -r '.Devices[].ip ' "$json") )
+cmdname=( $(jq -r '.Commands[].name ' "$json") )
+cmd=( $(jq -r '.Commands[].cmd ' "$json") )
+cmdin=( $(jq -r '.Commands[].input ' "$json") )
 
-if [ $# -eq 0 ]; then
-    echo "USAGE: droku [DEVICE] [COMMAND]"
-    echo -en "(example: droku roku55 hulu\n\n"
-    echo "DEVICES:"
+function remote_control() {
+    ipindex=0
+    escape_char=$(printf "\u1b")
+    while true; do
+        read -rsn1 input
+        if [[ $input == $'=' ]]; then
+            ipindex=$((ipindex+1))
+            if [[ $ipindex == "${#ip[@]}" ]]; then
+                ipindex=0
+            fi
+            echo -en "\r\033[KCurrent Device: Roku-${name[ipindex]}"
+        elif [[ $input == $'' ]]; then
+            curl -d '' "http://${ip[$ipindex]}:8060/keypress/select"
+            echo -en "\r\033[KCurrent Device: Roku-${name[ipindex]}"
+        elif [[ $input == "$escape_char" ]]; then
+            read -rsn2 input
+            case $input in
+                '[A')
+                    curl -d '' "http://${ip[$ipindex]}:8060/keypress/up"
+                    ;;
+                '[B')
+                    curl -d '' "http://${ip[$ipindex]}:8060/keypress/down"
+                    ;;
+                '[C')
+                    curl -d '' "http://${ip[$ipindex]}:8060/keypress/right"
+                    ;;
+                '[D')
+                    curl -d '' "http://${ip[$ipindex]}:8060/keypress/left"
+                    ;;
+            esac
+            echo -en "\r\033[KCurrent Device: Roku-${name[ipindex]}"
+        elif [ "$input" == $'q' ]; then
+            clear
+            exit 1
+        fi
+        for i in "${!cmdin[@]}"; do
+            if [[ $input == "${cmdin[$i]}" ]]; then
+                curl -d '' "http://${ip[$ipindex]}:8060/${cmd[$i]}" 
+                sleep 0.01
+                echo -en "\r\033[KCurrent Device: Roku-${name[ipindex]}"
+                break 1
+            fi
+        done
+    done
+}
+
+function print_list() {
+    ##  Print usage
+    clear
+    echo "BROKU"
+    echo -en "  Remote Control Mode: allows for using keyboard to control Roku devices\n\n"
+    
+    ## List Devices
+    echo "DEVICES: Cycle through devices with '='"  
     for i in "${name[@]}"; do
         echo "  $i"
     done
-    echo -en "\nCOMMANDS:\n"
-    echo "  Controls:"
+    
+    ## Split into 3
+    commands=()
     apps=()
+    inputs=()
     for i in "${!cmdname[@]}"; do
         if [[ "${cmd[$i]}" =~ "keypress" ]]; then
-            echo "    ${cmdname[$i]}"
+            commands+=("$i")
+        elif [[ "${cmd[$i]}" == *"tv"* ]]; then
+            inputs+=("$i")
         else
             apps+=("$i")
         fi
     done
-    echo "  Apps:"
-    inputs=()
-    for i in "${apps[@]}"; do
-        if [[ "${cmd[$i]}" == *"tv"* ]]; then
-            inputs+=($i)
-        else
-            echo "    ${cmdname[$i]}"
-        fi
+    
+    ## List commands and inputs
+    echo -en "\nCOMMANDS:\n"
+    rows=${#commands[@]}/2
+    echo "  Controls:"
+    echo "   ___Controls_____________________________________________________"
+    for (( i=0; i<="$rows-1"; i++ )); do
+        cn1="${cmdname[${commands[$i]}]}"
+        cn2="${cmdname[${commands[$i+$rows]}]}"
+        ci1="${cmdin[${commands[$i]}]}"
+        ci2="${cmdin[${commands[$i+$rows]}]}"
+        printf "  || %15s | %-10s || %15s | %-10s ||\n" "$cn1" "$ci1" "$cn2" "$ci2"
     done
-    echo "  TV Inputs:"
-    for i in "${inputs[@]}"; do
-        echo "    ${cmdname[$i]}"
+    echo "   ________________________________________________________________"
+    echo "   ___Apps____________________________TV_Inputs____________________"
+    (( rows=${#apps[@]} ))
+    for (( i=0; i<="$rows"-1; i++ )); do
+        an="${cmdname[${apps[$i]}]}"
+        ai="${cmdin[${apps[$i]}]}"
+        tn="${cmdname[${inputs[$i]}]}"
+        ti="${cmdin[${inputs[$i]}]}"
+        printf "  || %15s | %-10s || %15s | %-10s ||\n" "$an" "$ai" "$tn" "$ti"
     done
+    echo "   ________________________________________________________________"
     echo -en "\n"
+    echo "From command line:"
+    echo "  Usage with arguments: broku [DEVICE] [COMMAND]"
+    echo "    Uses device names and command names listed above"
+    echo -en "    (example: broku 55 hulu)\n\n"
+}
+
+if [ $# -eq 0 ]; then
+    ## Print devices and commands if no arguments called
+    print_list
+    echo -en "\nCurrent Device: Roku-${name[$ipindex]}"
+    remote_control
     exit 1
 else
-
     ## Read arguments
     DEVICE=$1
     REQUEST=$2
 
-    ## Create local variables
-    ipindex=99
-    cmdindex=99
-
     ## Compare arguments to device and command names
-    for i in ${!name[@]}; do
-        if [[ ${name[$i]} == $DEVICE ]]; then
+    ipmatch=false
+    cmdmatch=false
+    for i in "${!name[@]}"; do
+        if [[ ${name[$i]} == "$DEVICE" ]]; then
             ipindex=$i
+            ipmatch=true
         fi
     done
-    for i in ${!cmdname[@]}; do
-        if [[ ${cmdname[$i]} == ${REQUEST} ]]; then
+    for i in "${!cmdname[@]}"; do
+        if [[ ${cmdname[$i]} == "${REQUEST}" ]]; then
             cmdindex=$i
+            cmdmatch=true
         fi
     done
 
-    if [[ $ipindex == 99 ]] || [[ $cmdindex == 99 ]]; then
-        echo "ERROR: Check arguments"
+    if [[ $ipmatch == false ]] || [[ $cmdmatch == false ]]; then
+        echo -en "ERROR: Check arguments\n\n"
     else
         echo "${cmdname[$cmdindex]^} command requested on ${name[$ipindex]}: ${ip[$ipindex]}"
+        url="http://${ip[$ipindex]}:8060"
+        curl -d '' "$url/${cmd[$cmdindex]}"
+        echo -en "${name[$ipindex]^} has been sent a ${cmdname[$cmdindex]} signal\n\n"
     fi
 
-    url="http://${ip[$ipindex]}:8060"
-
-    curl -d '' "$url/${cmd[$cmdindex]}"
-    echo -en "${name[$ipindex]^} has been sent a ${cmdname[$cmdindex]} signal\n\n"
 fi
 

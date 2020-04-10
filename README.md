@@ -6,8 +6,7 @@ This script brings bash-based controls for multiple Roku devices to the
 terminal.  It uses curl commands from Roku, and it allows for easy
 modification to available controls in a \*.json file.
 
-I was (and am still sometimes) using
-[roku-cli](https://github.com/ncmiller/roku-cli) for Roku controls.  I highly
+I was using [roku-cli](https://github.com/ncmiller/roku-cli) for Roku controls.  I highly
 recommend it for its ease of use, but it didn't have all the commands I was
 looking for, namely power and volume controls and app buttons.
 
@@ -21,12 +20,15 @@ $ mkdir -p ~/bin
 $ ln -s $HOME/Projects/broku/broku ~/bin/broku
 ```
 
+##### jq Arch Installation
 Requires jq package for reading json file:
-#### Arch Installation
 ```
 sudo pacman -S jq
 ```
+Haven't tried this on any other distros, but jq is most likely available on
+other ones.
 
+##### Add ~/bin to PATH
 To directly access commands in your bin folder, put this at the end of your .bashrc file:
 ```
 export PATH=$PATH:~/bin
@@ -38,14 +40,20 @@ devices, giving them a name and an ip address.  You can find the ip address for
 each device in the settings on the device under Settings > Network > About.
 
 ### Usage:
-For now, usage is one command at a time by running:
+```
+I finished the terminal remote control.  You can open it by just using:
+$ broku
+```
+
+BRoku can be used in one-shot commands by doing:
 ```
 $ broku [DEVICE] [COMMAND]
 ```
 
-So, to power on my 55" roku TV, I use:
+So, to power on my 55" roku TV and open Hulu, I use:
 ```
-$ broku 55 power
+$ broku 55 power && broku 55 hulu
+
 ```
 
 To edit the devices or commands that you want to use, edit the broku_args.json
@@ -59,9 +67,7 @@ Included commands are:
 * volumemute
 * back
 * home
-* enter
-  * ok
-  * select
+* enter/ok
 * up
 * down
 * left
@@ -81,6 +87,7 @@ Included commands are:
 * hdmi1
 * hdmi2
 * hdmi3
+* hdmi4
 
 I have also included these commands which switch to the Roku TV inputs
 * computer
@@ -103,6 +110,17 @@ add the name and ID to broku\_args.json as follows:
 * Automatic search for device and add
 * Automatic add Roku apps
 * Single-key command inputs (see [roku-cli](https://github.com/ncmiller/roku-cli))
+* Command-mode:
+  * String multiple commands 
+    *  ex: To power on TV and open hulu app:
+        ```
+        $ broku 55 power hulu
+        ```
+  * Use default device
+    *  ex: If first device is '55', power on using:
+        ```
+        $ broku power
+        ```
 
 ### References:
 * [roku-cli](https://github.com/ncmiller/roku-cli)
