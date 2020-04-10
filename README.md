@@ -16,7 +16,7 @@ In the current state, the repo needs to be stored in ~/Projects/broku.  That
 will be fixed later.
 ```
 $ mkdir -p ~/Projects
-$ git clone https://github.com/doctriam/awesomerc ~/Projects/broku
+$ git clone https://github.com/doctriam/broku ~/Projects/broku
 $ mkdir -p ~/bin
 $ ln -s $HOME/Projects/broku/broku ~/bin/broku
 ```
