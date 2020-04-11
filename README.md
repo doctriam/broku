@@ -42,8 +42,8 @@ devices, giving them a name and an ip address.  You can find the ip address for
 each device in the settings on the device under Settings > Network > About.
 
 ### Usage:
-```
 I finished the terminal remote control.  You can open it by just using:
+```
 $ broku
 ```
 
@@ -96,12 +96,38 @@ I have also included these commands which switch to the Roku TV inputs
 * chromecast
 * switch
 
+### One-Shot Terminal Commands
+A template has been added for those who prefer a one-shot command such as
+powering on a Roku TV.  This is in the repo as broku\_template.sh.
+1. Make a copy of the file: 
+  ```
+  $ cp broku_template.sh brokuOn
+  ```
+2. Open brokuOn in an editor
+3. Replace the IP address in the command with the one for your Roku device
+4. Save the file
+5. Create a symlink in ~/bin
+  ```
+  ln -s $HOME/Projects/broku/brokuOn ~/bin/brokuOn
+  ```
+6. Add the following line to the end of ~/.bashrc
+  ```
+  export PATH=$PATH:~/bin
+  ```
+You should now be able to turn on your device by running:
+  ```
+  $ brokuOn
+  ```
+You can modify the broku\_template.sh in many ways to run single commands, or
+you create a series of commands to perform a particular task on the Roku
+device.  See comments in broku\_template.sh for further information.
+
+
 ### Adding Roku App IDs:
 To add the apps that you use on your Roku device, call this in terminal:
 ```
 curl http://[device ip address]:8060/query/apps
 ```
-
 The output will display the app ID and name along with some other info.  Just
 add the name and ID to broku\_args.json as follows:
 ```
@@ -111,7 +137,6 @@ add the name and ID to broku\_args.json as follows:
 ### Planned improvements:
 * Automatic search for device and add
 * Automatic add Roku apps
-* Single-key command inputs (see [roku-cli](https://github.com/ncmiller/roku-cli))
 * Command-mode:
   * String multiple commands 
     *  ex: To power on TV and open hulu app:
