@@ -18,21 +18,26 @@ will be fixed later.
 ```
 $ mkdir -p ~/Projects
 $ git clone https://github.com/doctriam/broku ~/Projects/broku
-$ mkdir -p ~/bin
-$ ln -s $HOME/Projects/broku/broku ~/bin/broku
+$ mkdir -p ~/.local/bin
+$ ln -s $HOME/Projects/broku/broku ~/.local/bin/broku
 ```
 ##### jq Arch Installation
 Requires jq package for reading json file:
 ```
-sudo pacman -S jq
+$ sudo pacman -S jq
 ```
 Haven't tried this on any other distros, but jq is most likely available on
 other ones.
 
-##### Add ~/bin to PATH
-To directly access commands in your bin folder, put this at the end of your .bashrc file:
+##### Add ~/.local/bin to PATH
+To directly access commands in your bin folder, verify that '~/.local/bin` is in your PATH:
 ```
-export PATH=$PATH:~/bin
+$ printenv | grep PATH
+```
+and look for the folder in the PATH variable.  If it is not already in PATH,
+add this to the bottom of ~/.bashrc:
+```
+export PATH=$PATH:~/.local/bin
 ```
 To setup devices, open up broku\_args.json in your favorite editor and edit the
 devices, giving them a name and an ip address.  You can find the ip address for
@@ -105,13 +110,13 @@ shortcut to turn on a TV that has a desktop connected to it.
 2. Open brokuOn in an editor
 3. Replace the IP address in the command with the one for your Roku device
 4. Save the file
-5. Create a symlink in ~/bin
+5. Create a symlink in ~/.local/bin
   ```
-  ln -s $HOME/Projects/broku/brokuOn ~/bin/brokuOn
+  ln -s $HOME/Projects/broku/brokuOn ~/.local/bin/brokuOn
   ```
 6. Add the following line to the end of ~/.bashrc
   ```
-  export PATH=$PATH:~/bin
+  export PATH=$PATH:~/.local/bin
   ```
 You should now be able to turn on your device by running:
   ```
