@@ -21,7 +21,6 @@ $ git clone https://github.com/doctriam/broku ~/Projects/broku
 $ mkdir -p ~/bin
 $ ln -s $HOME/Projects/broku/broku ~/bin/broku
 ```
-
 ##### jq Arch Installation
 Requires jq package for reading json file:
 ```
@@ -35,8 +34,6 @@ To directly access commands in your bin folder, put this at the end of your .bas
 ```
 export PATH=$PATH:~/bin
 ```
-
-
 To setup devices, open up broku\_args.json in your favorite editor and edit the
 devices, giving them a name and an ip address.  You can find the ip address for
 each device in the settings on the device under Settings > Network > About.
@@ -46,18 +43,15 @@ I finished the terminal remote control.  You can open it by just using:
 ```
 $ broku
 ```
-
 BRoku can be used in one-shot commands by doing:
 ```
 $ broku [DEVICE] [COMMAND]
 ```
-
 So, to power on my 55" roku TV and open Hulu, I use:
 ```
 $ broku 55 power && broku 55 hulu
 
 ```
-
 To edit the devices or commands that you want to use, edit the broku_args.json
 file.  Specifically, change the names to adjust the the arguments that you want
 to use to call each device or command.
@@ -98,7 +92,12 @@ I have also included these commands which switch to the Roku TV inputs
 
 ### One-Shot Terminal Commands
 A template has been added for those who prefer a one-shot command such as
-powering on a Roku TV.  This is in the repo as broku\_template.sh.
+powering on a Roku TV.  This is in the repo as broku\_template.sh.  
+
+A one-shot
+command can be used, for example, to turn on a TV with a laptop connected to
+it without having to track down a remote or even assigned as a keyboard
+shortcut to turn on a TV that has a desktop connected to it.
 1. Make a copy of the file: 
   ```
   $ cp broku_template.sh brokuOn
@@ -122,6 +121,9 @@ You can modify the broku\_template.sh in many ways to run single commands, or
 you create a series of commands to perform a particular task on the Roku
 device.  See comments in broku\_template.sh for further information.
 
+If you prefer to use [roku-cli](https://github.com/ncmiller/roku-cli) or
+another app that doesn't have certain functions, you can create one-shot
+commands for the tasks that they don't do.
 
 ### Adding Roku App IDs:
 To add the apps that you use on your Roku device, call this in terminal:
